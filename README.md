@@ -21,9 +21,11 @@
   - -d/--domain：处理链接的域名，比如www.ferragamo.cn。
 
 入口页面相关操作：
-- 原始数据导入：write_entries.py -f entries/xxx.txt -c entry_config（-c参数可使用默认）
+- 原始数据导入：write_entries.py -f entries/xxx.txt（运营提供的url列表） -c entry_config（-c参数可使用默认）
 - 商品列表导出：output_products.py -f products/xxx.txt（输出路径） -t 5（指定task的id，输出结果） -c entry_config（-c参数可使用默认）
+- 数据抓取：scrapy crawl entry_xxx
 
 商品页相关操作
 - 原始数据导入：write_products.py -f products/xxx.txt -c product_config（-c参数可使用默认）
 - 商品详情导出：output_details.py -f details/xxx.txt -b xxx（result表content字段的brand项） -c entry_config（-c参数可使用默认）
+- 数据抓取：scrapy crawl product_xxx
