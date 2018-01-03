@@ -60,7 +60,6 @@ class ProductFerragamoSpider(scrapy.Spider):
         product['images'] = ';'.join(images)
         # detail
         element = utils.find_element_by_css_selector(driver, 'div.dpd-info__body')
-        print(element)
         if element:
             product['detail'] = element.get_attribute('innerHTML').strip()
         return product
