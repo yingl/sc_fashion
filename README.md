@@ -27,5 +27,5 @@
 
 商品页相关操作
 - 原始数据导入：write_products.py -f products/xxx.txt -c product_config（-c参数可使用默认）
-- 商品详情导出：output_details.py -f details/xxx.txt -b xxx（result表content字段的brand项） -c entry_config（-c参数可使用默认）
+- 商品详情导出：output_details.py -f details/xxx.txt -b xxx（result表content字段的brand项） -c product_config（-c参数可使用默认）
 - 数据抓取：scrapy crawl product_xxx
