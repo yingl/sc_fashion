@@ -22,8 +22,12 @@ if __name__ == '__main__':
     config = importlib.import_module(args.config)
     database.init_database(config.db)
     results = database.Result.select()
+    sources = database.Source.select() # 临时修改
     with open(args.file, 'w+', encoding='utf-8') as f:
         for result in results:
+            source = sources.where(database.Source.id == result.source_id).get()
             data = eval(result.content)
             if data['brand'] == brand:
-                f.write(result.content + '\n')
+                data['url'] = source.url
+                data = str(data).replace("'", '"')
+                f.write(data + '\n')
