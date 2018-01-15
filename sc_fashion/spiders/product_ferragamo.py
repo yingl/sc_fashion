@@ -47,7 +47,7 @@ class ProductFerragamoSpider(scrapy.Spider):
         # code
         element = utils.find_element_by_css_selector(driver, 'div.dpd-main__details__head > div > div.dpd-main__sku')
         if element:
-            product['code'] = element.text.strip().split(' ')[1]
+            product['code'] = ' '.join(element.text.strip().split(' ')[1:])
         # unit
         product['unit'] = config.rmb
         # price
