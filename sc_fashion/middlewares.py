@@ -6,6 +6,8 @@
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from scrapy.http import HtmlResponse
+from sc_fashion.extras import utils
 
 
 class ScFashionSpiderMiddleware(object):
@@ -54,3 +56,11 @@ class ScFashionSpiderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class SeleniumMiddleWare(object):
+    def process_request(self, request, spider):
+        driver = utils.create_chrome_driver()
+        driver.get(request.url)
+        response = HtmlResponse(url=request.url)    
+        response.driver = driver
+        return response

@@ -12,24 +12,21 @@ class ProductFerragamoSpider(scrapy.Spider):
     brand = 'ferragamo'
     allowed_domains = ['www.ferragamo.cn']
 
-    def __init__(self):
-        database.init_database(config.db)
-
     def start_requests(self):
+        database.init_database(config.db)
         for job in utils.fetch_jobs(database, queue, config):
             url = job['url']
+            meta = job
+            meta['config'] = config
+            meta['database'] = database
+            meta['parse'] = self.parse_page
             if utils.check_domain(url, ProductFerragamoSpider.allowed_domains):
-                yield scrapy.Request('http://localhost', callback=self.parse, dont_filter=True, meta=job)
-
-    def parse(self, response):
-        result = utils.parse(self.parse_page, response.meta, config)
-        result['database'] = database # 传递db信息
-        yield result
+                yield scrapy.Request(url, callback=utils.parse, dont_filter=True, meta=meta)
 
     def parse_page(self, driver, url):
         products = []
-        driver.get(url)
-        product = {'brand': ProductFerragamoSpider.brand,
+        product = {'url': url,
+                   'brand': ProductFerragamoSpider.brand,
                    'code': '',
                    'price': 0,
                    'images': '',

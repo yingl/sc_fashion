@@ -1,3 +1,4 @@
+import scrapy
 import time
 import traceback
 from selenium import webdriver
@@ -10,6 +11,7 @@ def create_chrome_driver():
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--ignore-ssl-errors')
     driver = webdriver.Chrome(chrome_options=options)
     driver.maximize_window()
     return driver
@@ -56,13 +58,15 @@ def build_result(meta):
     result['message'] = '' # 失败原因
     return result
 
-def parse(parse_page, meta, config):
-    driver = None
+def parse(response):
+    driver = response.driver
+    meta = response.meta
+    config = meta['config']
+    database = meta['database']
     url = meta['url']
     result = build_result(meta)
     try:
-        driver = create_chrome_driver()
-        result['content'] = parse_page(driver, url)
+        result['content'] = meta['parse'](driver, url)
         result['status'] = config.js_finished
     except Exception as e:
         result['message'] = '%s\n%s' % (e, traceback.format_exc())
@@ -70,4 +74,5 @@ def parse(parse_page, meta, config):
     finally:
         if driver:
             driver.quit()
-    return result
+    result['database'] = database # 传递db信息，供pipeline写入
+    yield result
